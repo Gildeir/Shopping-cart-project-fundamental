@@ -76,9 +76,10 @@ Seu projeto deve ter o comportamento parecido com o do gif abaixo quando finaliz
 1. Clone o repositório
   * `git clone https://github.com/tryber/sd-010-b-project-shopping-cart.git`.
   * Entre na pasta do repositório que você acabou de clonar:
-    * `cd sd-010-b-project-shopping-cart`
-
-2. Crie uma branch a partir da branch `master`
+    * `cd sd-010-a-project-shopping-cart`
+2. Instale as dependências
+  * `npm install`
+3. Crie uma branch a partir da branch `master`
   * Verifique que você está na branch `master`
     * Exemplo: `git branch`
   * Se não estiver, mude para a branch `master`
@@ -87,7 +88,7 @@ Seu projeto deve ter o comportamento parecido com o do gif abaixo quando finaliz
     * Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
     * Exemplo: `git checkout -b joaozinho-project-shopping-cart`
 
-3. Quando fizer mudanças, adicione-as ao _stage_ do Git e faça um `commit`
+4. Quando fizer mudanças, adicione-as ao _stage_ do Git e faça um `commit`
   * Verifique que as mudanças ainda não estão no _stage_
     * Exemplo: `git status` (devem aparecer listados os novos arquivos em vermelho)
   * Adicione o novo arquivo ao _stage_ do Git
@@ -99,10 +100,10 @@ Seu projeto deve ter o comportamento parecido com o do gif abaixo quando finaliz
         * `git commit -m 'iniciando o projeto. VAMOS COM TUDO :rocket:'` (fazendo o primeiro commit)
         * `git status` (deve aparecer uma mensagem tipo _nothing to commit_ )
 
-4. Adicione a sua branch com o novo `commit` ao repositório remoto
+5. Adicione a sua branch com o novo `commit` ao repositório remoto
   * Usando o exemplo anterior: `git push -u origin joaozinho-project-shopping-cart`
 
-5. Crie um novo `Pull Request` _(PR)_
+6. Crie um novo `Pull Request` _(PR)_
   * Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-010-b-project-shopping-cart/pulls)
   * Clique no botão verde _"New pull request"_
   * Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
