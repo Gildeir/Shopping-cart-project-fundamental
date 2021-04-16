@@ -1,3 +1,6 @@
+// const { create } = require('eslint/lib/rules/*');
+let getSku;
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,29 +15,64 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+function createCartItemElement({
+  sku,
+  name,
+  salePrice,
+}) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  // li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+  const insertID = () => {
+    const url = `https://api.mercadolibre.com/items/${getSku}`;
+    fetch(url)
+    .then((r) => r.json())
+    .then((itemID) => {
+      const itemIdObj = {
+        sku: itemID.id,
+        name: itemID.title,
+        salePrice: itemID.price,
+      };
+      const orderedList = document.querySelector('.cart__items');
+      orderedList.appendChild(createCartItemElement(itemIdObj));      
+      console.log(orderedList);
+    });   
+   };
+  
+  function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  getSku = sku;
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+  .addEventListener('click', insertID);
   return section;
 }
-// createProductItemElement();
+
+const emptyCart = () => {
+  const buttonEmptyCart = document.querySelector('.empty-cart');
+  buttonEmptyCart.addEventListener('click', () => {
+   const orderedList = document.querySelectorAll('.cart__items');
+    orderedList.forEach((item) => item.parentNode.removeChild(item));
+  });
+};
 
 /* A lista de produtos que devem ser exibidos é o array results no JSON acima.
 Você deve utilizar a função createProductItemElement(product) para criar os componentes HTML referentes a um produto.
 Adicione o elemento retornado da função createProductItemElement(product) como filho do elemento < section class = "items" >
   Obs: as variáveis sku, no código fornecido, se referem aos campos id retornados pela API. */
 
-function renderProducts(products) {
+ function renderProducts(products) {
   console.log(products);
   const itemsClass = document.querySelector('.items');
   products.forEach((product) => {
-    itemsClass.appendChild(createProductItemElement(product));
+  itemsClass.appendChild(createProductItemElement(product));
   });
 }
 async function getProducts() {
@@ -43,32 +81,19 @@ async function getProducts() {
   const products = allproducts.results;
   return products;
 }
-
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
-// getSkuFromProductItem();
-// function cartItemClickListener(event) {
 
-//   // coloque seu código aqui
-// }
-// function createCartItemElement({
-//   sku,
-//   name,
-//   salePrice,
-// }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   // li.addEventListener('click', cartItemClickListener);
-//   return li;
+// function cartItemClickListener(event) {
+//  const cartItem = event.target;
 // }
 
 if (typeof window !== 'undefined') {
   window.onload = async function () {
     console.log('it\'s alive');
     const products = await getProducts();
-    renderProducts(products);
-    // createProductItemElement();
-};
+    renderProducts(products); 
+    emptyCart();
+    };
   }
