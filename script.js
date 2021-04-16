@@ -54,8 +54,8 @@ function createCartItemElement({ sku, name, salePrice }) {
 const emptyCart = () => {
   const buttonEmptyCart = document.querySelector('.empty-cart');
   buttonEmptyCart.addEventListener('click', () => {
-   const li = document.querySelectorAll('.cart__items');
-    li.forEach((item) => item.parentNode.removeChild(item));
+   const orderedList = document.querySelectorAll('.cart__items');
+    orderedList.forEach((item) => item.parentNode.removeChild(item));
   });
 };
 
