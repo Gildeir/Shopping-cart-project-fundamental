@@ -1,5 +1,6 @@
 // const { create } = require('eslint/lib/rules/*');
 // let getSku;
+    const cartItemsClass = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -26,6 +27,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;  
 }
+
+let arrItem = [];
     
   function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     const section = document.createElement('section');
@@ -38,16 +41,25 @@ function createCartItemElement({ sku, name, salePrice }) {
       const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
       const objProduct = await response.json();
       const itemIdObj = { sku: objProduct.id, name: objProduct.title, salePrice: objProduct.price };
-      const orderedList = document.querySelector('.cart__items');
+      const orderedList = document.querySelector(cartItemsClass);
       orderedList.appendChild(createCartItemElement(itemIdObj));
+      arrItem.push(itemIdObj);
+      console.log(arrItem);
+      localStorage.setItem('itemIdObj', JSON.stringify(arrItem));      
     });
     return section;
   }
 
+    function AddLocalStorage() {
+      const objString = localStorage.getItem('itemIdObj');
+      arrItem = objString ? JSON.parse(objString) : [];
+      document.querySelector(cartItemsClass).innerHTML = createProductItemElement();
+    }
+
 const emptyCart = () => {
   const buttonEmptyCart = document.querySelector('.empty-cart');
   buttonEmptyCart.addEventListener('click', () => {
-   const orderedList = document.querySelectorAll('.cart__items');
+   const orderedList = document.querySelectorAll(cartItemsClass);
     orderedList.forEach((item) => item.parentNode.removeChild(item));
   });
 };
@@ -67,12 +79,12 @@ async function getProducts() {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
-
 if (typeof window !== 'undefined') {
   window.onload = async function () {
     console.log('it\'s alive');
     const products = await getProducts();
     renderProducts(products); 
     emptyCart();
+    AddLocalStorage();
     };
   }
