@@ -1,6 +1,5 @@
 // const { create } = require('eslint/lib/rules/*');
-// let getSku;
-    const cartItemsClass = '.cart__items';
+const cartItemsClass = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -28,7 +27,17 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;  
 }
 
-let arrItem = [];
+// let arrItem = [];
+
+async function renderCart(objProduct) {
+  const itemIdObj = { sku: objProduct.id, name: objProduct.title, salePrice: objProduct.price };
+  const orderedList = document.querySelector(cartItemsClass);
+  orderedList.appendChild(createCartItemElement(itemIdObj));
+  localStorage.setItem('cart', orderedList.innerHTML);
+  // if (arrItem) arrItem.push(itemIdObj);
+  // console.log(arrItem);
+  // localStorage.setItem('cart', JSON.stringify(arrItem));
+}
     
   function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     const section = document.createElement('section');
@@ -38,29 +47,27 @@ let arrItem = [];
     section.appendChild(createProductImageElement(image));
     section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', async () => {
-      const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
-      const objProduct = await response.json();
-      const itemIdObj = { sku: objProduct.id, name: objProduct.title, salePrice: objProduct.price };
-      const orderedList = document.querySelector(cartItemsClass);
-      orderedList.appendChild(createCartItemElement(itemIdObj));
-      arrItem.push(itemIdObj);
-      console.log(arrItem);
-      localStorage.setItem('itemIdObj', JSON.stringify(arrItem));      
+        const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+        const objProduct = await response.json();
+        renderCart(objProduct);
     });
     return section;
   }
 
-    function AddLocalStorage() {
-      const objString = localStorage.getItem('itemIdObj');
-      arrItem = objString ? JSON.parse(objString) : [];
-      document.querySelector(cartItemsClass).innerHTML = createProductItemElement();
+    function getocalStorageData() {
+      const getLocalStorageData = localStorage.getItem('cart');
+      document.querySelector(cartItemsClass).innerHTML = getLocalStorageData;
+    // // const objString = localStorage.getItem('cart');
+    // // arrItem = objString ? JSON.parse(objString) : [];
     }
 
 const emptyCart = () => {
   const buttonEmptyCart = document.querySelector('.empty-cart');
   buttonEmptyCart.addEventListener('click', () => {
-   const orderedList = document.querySelectorAll(cartItemsClass);
+  localStorage.clear('cart');
+    const orderedList = document.querySelectorAll(cartItemsClass);
     orderedList.forEach((item) => item.parentNode.removeChild(item));
+    document.location.reload(true);
   });
 };
 
@@ -85,6 +92,9 @@ if (typeof window !== 'undefined') {
     const products = await getProducts();
     renderProducts(products); 
     emptyCart();
-    AddLocalStorage();
+    getocalStorageData();
+    // const objString = localStorage.getItem('cart');
+    // arrItem = objString ? JSON.parse(objString) : [];
+    // getocalStorageData();
     };
   }
