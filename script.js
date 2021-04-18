@@ -28,12 +28,20 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 // let arrItem = [];
+const arr = [];
+
+async function asyncSumPrice(itemIdObj) {
+  if (arr) arr.push(itemIdObj.salePrice);
+  const reducer = (accumulatr, currenValue) => accumulatr + currenValue;
+  (arr.reduce(reducer, 0));
+}
 
 async function renderCart(objProduct) {
   const itemIdObj = { sku: objProduct.id, name: objProduct.title, salePrice: objProduct.price };
   const orderedList = document.querySelector(cartItemsClass);
   orderedList.appendChild(createCartItemElement(itemIdObj));
   localStorage.setItem('cart', orderedList.innerHTML);
+   asyncSumPrice(itemIdObj);
   // if (arrItem) arrItem.push(itemIdObj);
   // console.log(arrItem);
   // localStorage.setItem('cart', JSON.stringify(arrItem));
