@@ -33,7 +33,8 @@ const arr = [];
 async function asyncSumPrice(itemIdObj) {
   if (arr) arr.push(itemIdObj.salePrice);
   const reducer = (accumulatr, currenValue) => accumulatr + currenValue;
-  (arr.reduce(reducer, 0));
+  const total = await (arr.reduce(reducer, 0));
+  console.log(total);
 }
 
 async function renderCart(objProduct) {
