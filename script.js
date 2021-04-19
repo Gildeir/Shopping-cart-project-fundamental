@@ -8,6 +8,14 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+function loadingFuntion() {
+  const itemClass = document.querySelector('.items');
+  const spanElement = document.createElement('span');
+  spanElement.className = 'loading';
+  spanElement.innerHTML = 'loading...';
+  itemClass.appendChild(spanElement);
+}
+
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -31,10 +39,12 @@ function createCartItemElement({ sku, name, salePrice }) {
 const arr = [];
 
 async function asyncSumPrice(itemIdObj) {
+  // const elementPriceClass = document.querySelector('.total-price');
   if (arr) arr.push(itemIdObj.salePrice);
   const reducer = (accumulatr, currenValue) => accumulatr + currenValue;
-  const total = await (arr.reduce(reducer, 0));
+  const total = await (arr.reduce(reducer, 0)).toFixed(2);
   console.log(total);
+  // elementPriceClass.innerHTML = 'asd';
 }
 
 async function renderCart(objProduct) {
@@ -60,7 +70,7 @@ async function renderCart(objProduct) {
         const objProduct = await response.json();
         renderCart(objProduct);
     });
-    return section;
+   return section;
   }
 
     function getocalStorageData() {
@@ -81,27 +91,31 @@ const emptyCart = () => {
 };
 
  function renderProducts(products) {
+  document.querySelector('.loading').remove();
   const itemsClass = document.querySelector('.items');
   products.forEach((product) => { 
   itemsClass.appendChild(createProductItemElement(product));
-  });
+});
 }
 async function getProducts() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const allproducts = await response.json();
   const products = allproducts.results;
-  return products;
+  return products;  
 }
+
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 if (typeof window !== 'undefined') {
   window.onload = async function () {
-    console.log('it\'s alive');
+    console.log('it\'s almost alive');
+    loadingFuntion();
     const products = await getProducts();
-    renderProducts(products); 
+    renderProducts(products);
     emptyCart();
     getocalStorageData();
+    // asyncSumPrice();
     // const objString = localStorage.getItem('cart');
     // arrItem = objString ? JSON.parse(objString) : [];
     // getocalStorageData();
