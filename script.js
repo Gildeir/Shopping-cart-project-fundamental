@@ -22,11 +22,24 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+const priceAccumulator = [];
 function cartItemClickListener(event) {
-  const removeProduct = event.target;
-  removeProduct.parentNode.removeChild(removeProduct);
-}
-
+  const { target } = event;
+  // const removeProduct = target;
+  // removeProduct.parentNode.removeChild(removeProduct);
+  const spanElement = document.querySelector('.total-price');
+  const newObj = target.parentNode.children;
+  const objRest = [...newObj];
+  objRest.forEach((value, index) => {
+    if (target === value) {
+      target.parentNode.removeChild(target);
+      priceAccumulator.splice(index, 1);  
+      const totalPrice = priceAccumulator
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      spanElement.textContent = totalPrice;
+    }
+    });
+  }
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -36,15 +49,13 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 // let arrItem = [];
-const arr = [];
-
 async function asyncSumPrice(itemIdObj) {
   // const elementPriceClass = document.querySelector('.total-price');
-  if (arr) arr.push(itemIdObj.salePrice);
-  const reducer = (accumulatr, currenValue) => accumulatr + currenValue;
-  const total = await (arr.reduce(reducer, 0)).toFixed(2);
-  console.log(total);
-  // elementPriceClass.innerHTML = 'asd';
+  if (priceAccumulator) priceAccumulator.push(itemIdObj.salePrice);
+  const reducer = (accumulator, currenValue) => accumulator + currenValue;
+  const totalPrice = await (priceAccumulator.reduce(reducer, 0));
+    const spanElement = document.querySelector('.total-price');
+  spanElement.textContent = totalPrice;  
 }
 
 async function renderCart(objProduct) {
